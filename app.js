@@ -46,7 +46,11 @@ var octopus = {
   },
   // Update and store individual click count.
   updateClickCount: function() {
-    selectedObject.clickCount ++;
+    document.querySelector('img').onclick = function(e) {
+      let selectedCat =  model[e.srcElement.className];
+      selectedCat.clickCount ++;
+      document.querySelector('.selected_count').innerHTML = `${selectedCat.name} Accumulated ClickCount: ${selectedCat.clickCount}`;
+    };
   },
 };
 
@@ -54,58 +58,16 @@ var listView = {
   // Display cat data in list.
   init: function() {
     octopus.displayCatList();
-  }
+  },
 };
 
 var imageView = {
-  //Display selected cat image.
+  //Display selected cat image and message.
   init: function() {
     octopus.selectCat();
+    octopus.updateClickCount();
   },
 }
 
 octopus.init();
 
-
-
-
-// class AllCats {
-//   constructor() {
-//     this.catList = ['Cat1','Cat2','Cat3'];
-//     this.catListing = [];
-//   }
-//   createList(cat) {
-//     return `<li class="${cat}">Cat Name: ${cat}</li>`
-//   }
-//   fillList() {
-//     for(var i = 0; i < this.catList.length; i++) {
-//       var cat = this.catList[i];
-//       // console.log(cat);
-//       this.catListing.push(this.createList(cat));
-//       // console.log(listItem)
-//       // console.log(document.querySelector('.list').innerHTML)
-//     }
-//     document.querySelector('.list').innerHTML = this.catListing.join('');
-//   }
-//   displayImage() {
-//     document.querySelector('.list').onclick = function(e) {
-//       document.querySelector('img').className = `${e.srcElement.className}`;
-//       document.querySelector('img').src = `cat clicker/images/${e.srcElement.className}.jpg`
-//     }
-//   }
-//   clickCount() {
-//     for(var i = 1; i <= this.catList.length; i++) {
-//       this["clickCountCat"+i] = 0;
-//     }
-//     console.log(this.clickCountCat1)
-//     document.querySelector('img').onclick = function(e) {
-//       this[`clickCount${e.srcElement.className}`] ++;
-//       console.log(this.clickCount`${e.srcElement.className}`);
-//     }
-//   }
-// }
-//
-// let allCats = new AllCats();
-// allCats.fillList();
-// allCats.displayImage();
-// allCats.clickCount();
