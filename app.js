@@ -35,34 +35,19 @@ var octopus = {
     document.querySelector('.list').innerHTML = catList.join('');
   },
   // get selected cat object.
-  selectedCat: function() {
-
-  }
-  // Update click count holder.
-  countClick: function() {
-    model.generalClickCount ++;
+  selectCat: function() {
+    document.querySelector('.list').onclick = function(e) {
+      let selectedCat =  model[e.srcElement.className];
+      document.querySelector('img').src = selectedCat.image;
+      document.querySelector('img').className = selectedCat.name;
+      document.querySelector('.selected_name').innerHTML = `Selected Cat: ${selectedCat.name}`;
+      document.querySelector('.selected_count').innerHTML = `${selectedCat.name} Accumulated ClickCount: ${selectedCat.clickCount}`;
+    };
   },
   // Update and store individual click count.
-  updateClickCount: function(i) {
-    model.cat[i].clickCount += model.generalClickCount;
+  updateClickCount: function() {
+    selectedObject.clickCount ++;
   },
-  updateDisplayImage: function() {
-
-  },
-  //Select 'clicked' cat image source.
-  selectedImageSource: function() {
-    var selectedClass;
-    var imageSourceLink = "";
-    document.querySelector('.list').onclick = function(e) {
-      selectedClass = e.className;
-      '/image/`${selectedClass}'
-    }
-  },
-  //Display selected cat image.
-  displayCatImage: function() {
-    var displayImage = this.selectedImageSource();
-    document.querySelector('img').src = displayImage;
-  }
 };
 
 var listView = {
@@ -75,7 +60,7 @@ var listView = {
 var imageView = {
   //Display selected cat image.
   init: function() {
-    octopus.displayCatImage();
+    octopus.selectCat();
   },
 }
 
