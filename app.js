@@ -54,27 +54,18 @@ var octopus = {
     model.currentCat.clickCount ++;
     imageView.render();
   },
-  // initialAdmin: function() {
-  //   document.querySelector('form').style.display = "none";
-  //   document.querySelector('.admin_button').onclick = function(e) {
-  //     let selectedCat = model[document.querySelector('img').className];
-  //     document.querySelector('form').style.display = "block";
-  //     document.querySelector('.admin_name').value = `${selectedCat.name}`;
-  //     document.querySelector('.admin_url').value = `${selectedCat.imageURL}`;
-  //     document.querySelector('.admin_click').value = `${selectedCat.clickCount}`;
-  //   };
-  // },
-  // submitAdmin: function() {
-  //   document.querySelector('.submit').onclick = function(e) {
-  //     let selectedCat = model[document.querySelector('img').className];
-  //     console.log(selectedCat);
-  //     selectedCat.name = document.querySelector('.admin_name').value;
-  //     selectedCat.image = document.querySelector('.admin_url').value;
-  //     selectedCat.imageURL = document.querySelector('.admin_url').value;
-  //     selectedCat.clickCount = document.querySelector('.admin_click').value;
-  //     return false;
-  //   }
-  // } 
+  updateCat: function(newName, newImageUrl, newNumClick) {
+    for (var i = 0; i < model.cats.length; i++) {
+      if (model.cats[i] === this.getCurrentCat()) {
+        model.cats[i].name = newName;
+        model.cats[i].imageURL = newImageUrl;
+        model.cats[i].clickCount = newNumClick;
+        this.setCurrentCat(model.cats[i]);
+      }
+    }
+    listView.render();
+    imageView.render();
+  }
 };
 
 var listView = {
@@ -84,8 +75,8 @@ var listView = {
     this.render();
   },
   render: function() {
-    var cats, cat, i, listItem;
-
+    let cats, cat, i, listItem;
+    this.catListing.innerHTML = "";
     cats = octopus.getCats();
 
     for (i = 0; i < cats.length; i ++) {
@@ -101,6 +92,7 @@ var listView = {
         return function() {
           octopus.setCurrentCat(catCopy);
           imageView.render();
+          adminView.render();
         }
       })(cat));
     }
@@ -122,19 +114,37 @@ var imageView = {
   },
   render: function() {
     let currentCat = octopus.getCurrentCat();
-    console.log(currentCat);
     this.displayCount.innerHTML = currentCat.clickCount;
     this.displayName.innerHTML = currentCat.name;
-    this.imgElement.src = currentCat.image;
+    this.imgElement.src = currentCat.imageURL;
   }
 }
 
 var adminView = {
   init: function() {
-    octopus.initialAdmin();
-    octopus.submitAdmin();
+    this.adminButton = document.querySelector('.admin_button');
+    this.submitButton = document.querySelector('.submit');
+    document.querySelector('form').style.display = "none";
+    this.render();
+  }, 
+  render: function() {
+    let currentCat = octopus.getCurrentCat();
+    this.adminButton.addEventListener('click', function() {
+      document.querySelector('form').style.display = "block";
+      document.querySelector('.admin_name').value = currentCat.name;
+      document.querySelector('.admin_url').value = currentCat.imageURL;
+      document.querySelector('.admin_click').value = currentCat.clickCount;
+    });
+    this.submitButton.addEventListener('click', function(e) {
+      var newName = document.querySelector('.admin_name').value;
+      var newImageUrl = document.querySelector('.admin_url').value;
+      var newNumClick = document.querySelector('.admin_click').value;
+
+      octopus.updateCat(newName, newImageUrl, newNumClick);
+      e.preventDefault();
+    });
   }
 }
 
 octopus.init();
-
+console.log(model.cats[0])
